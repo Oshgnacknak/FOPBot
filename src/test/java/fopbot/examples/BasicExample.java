@@ -2,7 +2,6 @@ package fopbot.examples;
 
 import fopbot.Direction;
 import fopbot.Scene;
-import fopbot.World;
 import fopbot.impl.Grid;
 
 public class BasicExample implements Scene {

@@ -1,7 +1,7 @@
 package fopbot.global;
 
 import fopbot.Direction;
-import fopbot.global.Robot;
+import fopbot.Robot;
 
 public class Chess {
 

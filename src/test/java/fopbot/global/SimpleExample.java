@@ -1,6 +1,7 @@
 package fopbot.global;
 
 import fopbot.Direction;
+import fopbot.Robot;
 
 public class SimpleExample {
 

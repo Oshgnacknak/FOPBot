@@ -2,8 +2,8 @@ package fopbot.global;
 
 
 import fopbot.Direction;
-import fopbot.global.World;
-import fopbot.global.Robot;
+import fopbot.World;
+import fopbot.Robot;
 
 public class FillRectangle {
 

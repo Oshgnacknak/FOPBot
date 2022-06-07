@@ -1,8 +1,5 @@
 package fopbot.examples;
 
-import fopbot.Robot;
-import fopbot.World;
-
 public class Maze {
 
   public static void solveMaze(World world, Robot r) {
