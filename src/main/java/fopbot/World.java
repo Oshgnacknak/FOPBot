@@ -1,80 +1,70 @@
 package fopbot;
 
-import java.util.Collection;
+import fopbot.global.GlobalScene;
 
-public interface World {
+public class World {
 
-  /**
-   * @return the worlds width
-   */
-  int getWidth();
+  private World() {}
 
-  /**
-   * @return the worlds height
-   */
-  int getHeight();
+  public static void setSize(int width, int height) {
+    GlobalScene.INSTANCE.createWorld(width, height);
+  }
 
-  Collection<Entity> getEntities(int x, int y);
+  public static void setVisible(boolean visible) {
+    if (visible) {
+      GlobalScene.INSTANCE.run();
+    }
+  }
 
-  /**
-   * @return true if a block is in field (x, y)
-   */
-  boolean hasBlockInField(int x, int y);
+  public static int getWidth() {
+    return GlobalScene.INSTANCE.getWorld().getWidth();
+  }
 
-  /**
-   * @return true if there is a wall at field (x, y) in direction dir
-   */
-  boolean fieldHasWallInDirection(int x, int y, Direction dir);
+  public static int getHeight() {
+    return GlobalScene.INSTANCE.getWorld().getHeight();
+  }
 
-  /**
-   * @return true if at least one coin is in field (x, y)
-   */
-  boolean hasCoinInField(int x, int y);
+  public static void putBlock(int x, int y) {
+    GlobalScene.INSTANCE.getWorld().putBlock(x, y);
+  }
 
-  /**
-   * @return true if another robot is in field (x, y)
-   */
-  boolean hasAnotherRobotInField(int x, int y, Robot robot);
+  public static void putUpWall(int x, int y) {
+    GlobalScene.INSTANCE.getWorld().getGrid().setUpWall(x, y, true);
+  }
 
-  /**
-   * Puts down N coins at field (x, y)
-   */
-  void putCoins(int x, int y, int numberOfCoins);
+  public static void putDownWall(int x, int y) {
+    GlobalScene.INSTANCE.getWorld().getGrid().setDownWall(x, y, true);
+  }
 
-  /**
-   * Tries to remove one coin from the field (x,y)
-   *
-   * @return true if a  coin got removed
-   */
-  boolean pickCoin(int x, int y);
+  public static void putRightWall(int x, int y) {
+    GlobalScene.INSTANCE.getWorld().getGrid().setRightWall(x, y, true);
+  }
 
-  /**
-   * Places a block at field (x, y)
-   */
-  void putBlock(int x, int y);
+  public static void putLeftWall(int x, int y) {
+    GlobalScene.INSTANCE.getWorld().getGrid().setLeftWall(x, y, true);
+  }
+
+  public static void putCoins(int x, int y, int numberOfCoins) {
+    GlobalScene.INSTANCE.getWorld().putCoins(x, y, numberOfCoins);
+  }
 
   /**
-   * Adds a robot to the world at field (x, y) looking at direction dir
+   * @deprecated Use the equivalent <code>putDownWall(x, y)</code>
    */
-  Robot newRobot(int x, int y, Direction dir, int numberOfCoins);
+  @Deprecated
+  public static void placeVerticalWall(int x, int y) {
+    putDownWall(x, y);
+  }
 
   /**
-   * Reset the world (remove all entities)
+   * @deprecated Use the equivalent <code>putRightWall(x, y)</code>
    */
-  void reset();
+  @Deprecated
+  public static void placeHorizontalWall(int x, int y) {
+    putRightWall(x, y);
+  }
 
-  /**
-   * Indicate that the controlling script starts action in this world
-   */
-  void start();
-
-  /**
-   * @return If the world is still running a script
-   */
-  boolean isRunning();
-
-  /**
-   * Indicate that the controlling script as finished executing
-   */
-  void stop();
+  public static void setDelay(int delay) {
+    System.err.println("Warning: World.setDelay() is not implemented yet");
+  }
 }

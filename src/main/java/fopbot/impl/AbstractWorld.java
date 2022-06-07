@@ -2,8 +2,8 @@ package fopbot.impl;
 
 import fopbot.Direction;
 import fopbot.Entity;
-import fopbot.Robot;
-import fopbot.World;
+import fopbot.definitions.Robot;
+import fopbot.definitions.World;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -24,6 +24,11 @@ public abstract class AbstractWorld implements World {
   @Override
   public int getHeight() {
     return grid.getHeight();
+  }
+
+  @Override
+  public Grid getGrid() {
+    return grid;
   }
 
   @Override

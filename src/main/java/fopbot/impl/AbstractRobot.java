@@ -1,6 +1,10 @@
 package fopbot.impl;
 
-import fopbot.*;
+import fopbot.Direction;
+import fopbot.Entity;
+import fopbot.RobotException;
+import fopbot.definitions.Robot;
+import fopbot.definitions.World;
 
 public abstract class AbstractRobot extends Entity implements Robot {
 
@@ -23,20 +27,12 @@ public abstract class AbstractRobot extends Entity implements Robot {
       return;
     }
 
-    switch (dir) {
-      case NORTH:
-        dir = Direction.WEST;
-        break;
-      case EAST:
-        dir = Direction.NORTH;
-        break;
-      case SOUTH:
-        dir = Direction.EAST;
-        break;
-      case WEST:
-        dir = Direction.SOUTH;
-        break;
-    }
+    dir = switch (dir) {
+      case UP -> Direction.LEFT;
+      case RIGHT -> Direction.UP;
+      case DOWN -> Direction.RIGHT;
+      case LEFT -> Direction.DOWN;
+    };
   }
 
   @Override
@@ -132,24 +128,18 @@ public abstract class AbstractRobot extends Entity implements Robot {
   }
 
   private int getDx() {
-    switch (dir) {
-      case EAST:
-        return +1;
-      case WEST:
-        return -1;
-      default:
-        return 0;
-    }
+    return switch (dir) {
+      case RIGHT -> +1;
+      case LEFT -> -1;
+      default -> 0;
+    };
   }
 
   private int getDy() {
-    switch (dir) {
-      case NORTH:
-        return -1;
-      case SOUTH:
-        return +1;
-      default:
-        return 0;
-    }
+    return switch (dir) {
+      case UP -> +1;
+      case DOWN -> -1;
+      default -> 0;
+    };
   }
 }
