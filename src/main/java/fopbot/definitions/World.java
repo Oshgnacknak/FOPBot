@@ -2,6 +2,7 @@ package fopbot.definitions;
 
 import fopbot.Direction;
 import fopbot.Entity;
+import fopbot.impl.Grid;
 
 import java.util.Collection;
 
@@ -16,6 +17,12 @@ public interface World {
    * @return the worlds height
    */
   int getHeight();
+
+
+  /**
+   * @return the grid this world is wrapping around
+   */
+  Grid getGrid();
 
   Collection<Entity> getEntities(int x, int y);
 
