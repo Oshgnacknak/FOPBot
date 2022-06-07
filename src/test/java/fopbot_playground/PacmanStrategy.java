@@ -1,4 +1,4 @@
-package fopbot_playground.example;
+package fopbot_playground;
 
 public interface PacmanStrategy {
   int numberOfLeftTurns();

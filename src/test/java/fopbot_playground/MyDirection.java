@@ -1,4 +1,4 @@
-package fopbot_playground.example;
+package fopbot_playground;
 
 public enum MyDirection {
   UP,

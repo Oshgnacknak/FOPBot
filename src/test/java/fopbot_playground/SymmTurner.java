@@ -1,4 +1,4 @@
-package fopbot_playground.example;
+package fopbot_playground;
 
 import fopbot.Direction;
 import fopbot.Robot;
