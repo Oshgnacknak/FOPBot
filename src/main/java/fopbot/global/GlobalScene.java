@@ -1,6 +1,6 @@
 package fopbot.global;
 
-import fopbot.World;
+import fopbot.definitions.World;
 import fopbot.impl.Grid;
 
 public class GlobalScene {
@@ -39,5 +39,9 @@ public class GlobalScene {
 
   public void setRunner(GlobalRunner runner) {
     this.runner = runner;
+  }
+
+  public void run() {
+    runner.run();
   }
 }

@@ -6,7 +6,7 @@ import fopbot.Robot;
 public class Chess {
 
 	public static void main(String[] args) {
-		Robot chess = new Robot(1, 9, Direction.EAST, 32 );
+		Robot chess = new Robot(1, 9, Direction.RIGHT, 32 );
 
     for (int i = 0; i < 4; i++) {
 		     for (int j = 0; j < 8; j++) {

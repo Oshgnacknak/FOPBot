@@ -8,9 +8,9 @@ import fopbot.Robot;
 public class FillRectangle {
 
 	public static void main(String[] args) {
-		new World(12, 10);
+		World.setSize(12, 10);
 
-		Robot rex = new Robot(1, 9, Direction.EAST, 90);
+		Robot rex = new Robot(1, 9, Direction.RIGHT, 90);
 
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 10; j++) {

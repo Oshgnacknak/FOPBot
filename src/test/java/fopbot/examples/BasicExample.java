@@ -1,23 +1,15 @@
 package fopbot.examples;
 
 import fopbot.Direction;
-import fopbot.Scene;
-import fopbot.impl.Grid;
+import fopbot.Robot;
+import fopbot.World;
 
-public class BasicExample implements Scene {
-  @Override
-  public Grid getGrid() {
-    return new Grid(10, 10);
-  }
+public class BasicExample {
+  public static void main() {
+    World.setSize(10, 10);
 
-  @Override
-  public void init(World world) {
-  }
-
-  @Override
-  public void run(World world) {
     for (int i = 0; i < 3; i++) {
-      var r = world.newRobot(i, i, Direction.EAST, 2);
+      var r = new Robot(i, i, Direction.RIGHT, 2);
       while (r.hasAnyCoins()) {
         r.putCoin();
         r.move();

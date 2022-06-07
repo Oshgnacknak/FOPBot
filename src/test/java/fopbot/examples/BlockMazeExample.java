@@ -1,26 +1,30 @@
 package fopbot.examples;
 
 import fopbot.Direction;
-import fopbot.Scene;
-import fopbot.impl.Grid;
+import fopbot.Robot;
+import fopbot.World;
 
 import java.util.Random;
 
-public class BlockMazeExample implements Scene {
+public class BlockMazeExample {
 
-  private final Random random = new Random();
+  private static final Random random = new Random();
 
-  @Override
-  public Grid getGrid() {
-    return new Grid(9, 9);
+  public static void main(String[] args) {
+    World.setSize(9, 9);
+
+    generateMaze();
+    World.setVisible(true);
+
+    var r = new Robot(0, 0, Direction.UP, 999);
+    Maze.solveMaze(r);
   }
 
-  @Override
-  public void init(World world) {
-    recursiveDivide(world, 1, 1, world.getWidth() - 1, world.getHeight() - 1, random.nextBoolean());
+  public static void generateMaze() {
+    recursiveDivide(1, 1, World.getWidth() - 1, World.getHeight() - 1, random.nextBoolean());
   }
 
-  private void recursiveDivide(World world, int x1, int y1, int x2, int y2, boolean horizontal) {
+  private static void recursiveDivide(int x1, int y1, int x2, int y2, boolean horizontal) {
     boolean horizontalPossible = y2 - y1 > 1;
     boolean verticalPossible = x2 - x1 > 1;
 
@@ -34,25 +38,22 @@ public class BlockMazeExample implements Scene {
     if (horizontal) {
       for (int cx = x1; cx <= x2; cx++) {
         if (cx != x) {
-          world.putBlock(cx, y);
+          World.putBlock(cx, y);
         }
       }
-      recursiveDivide(world, x1, y1, x2, y - 1, false);
-      recursiveDivide(world, x1, y + 1, x2, y2, false);
+      recursiveDivide(x1, y1, x2, y - 1, false);
+      recursiveDivide(x1, y + 1, x2, y2, false);
     } else {
       for (int cy = y1; cy <= y2; cy++) {
         if (cy != y) {
-          world.putBlock(x, cy);
+          World.putBlock(x, cy);
         }
       }
-      recursiveDivide(world, x1, y1, x - 1, y2, true);
-      recursiveDivide(world, x + 1, y1, x2, y2, true);
+      recursiveDivide(x1, y1, x - 1, y2, true);
+      recursiveDivide(x + 1, y1, x2, y2, true);
     }
   }
 
-  @Override
   public void run(World world) {
-    var r = world.newRobot(0, 0, Direction.NORTH, 999);
-    Maze.solveMaze(world, r);
   }
 }

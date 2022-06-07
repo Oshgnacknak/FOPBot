@@ -1,10 +1,13 @@
 package fopbot.examples;
 
+import fopbot.World;
+import fopbot.definitions.Robot;
+
 public class Maze {
 
-  public static void solveMaze(World world, Robot r) {
+  public static void solveMaze(Robot r) {
     while (r.hasAnyCoins()) {
-      if (r.getX() == world.getWidth() - 1 && r.getY() == world.getHeight() - 1) {
+      if (r.getX() == World.getWidth() - 1 && r.getY() == World.getHeight() - 1) {
         break;
       }
 

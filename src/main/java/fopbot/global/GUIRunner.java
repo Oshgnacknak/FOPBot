@@ -1,6 +1,6 @@
 package fopbot.global;
 
-import fopbot.World;
+import fopbot.definitions.World;
 import fopbot.anim.AnimatedWorldFrame;
 import fopbot.anim.resources.Resources;
 import fopbot.impl.Grid;
@@ -8,6 +8,8 @@ import fopbot.impl.Grid;
 import java.io.IOException;
 
 public class GUIRunner implements GlobalRunner {
+
+  private AnimatedWorldFrame frame;
 
   @Override
   public World createWorld(Grid grid) {
@@ -17,11 +19,15 @@ public class GUIRunner implements GlobalRunner {
       e.printStackTrace();
     }
 
-    var frame = new AnimatedWorldFrame(grid);
-    var world = frame.getWorld();
+    frame = new AnimatedWorldFrame(grid);
 
-    world.start();
+    return frame.getWorld();
+  }
+
+  @Override
+  public void run() {
+    frame.setVisible(true);
+    frame.getWorld().start();
     frame.startUpdateThread();
-    return world;
   }
 }
