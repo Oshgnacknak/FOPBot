@@ -1,7 +1,7 @@
 package fopbot.anim;
 
 import fopbot.Direction;
-import fopbot.Robot;
+import fopbot.definitions.Robot;
 import fopbot.impl.AbstractWorld;
 import fopbot.impl.CoinStack;
 import fopbot.impl.Grid;
@@ -46,33 +46,34 @@ public class AnimatedWorld extends AbstractWorld {
 
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
-        if (grid.hasNorthWall(x, y)) {
+        var animY = getHeight() - y - 1;
+        if (grid.hasUpWall(x, y)) {
           d.line(
             x * CELL_SIZE,
-            y * CELL_SIZE,
+            animY * CELL_SIZE,
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE);
+            animY * CELL_SIZE);
         }
-        if (grid.hasSouthWall(x, y)) {
+        if (grid.hasDownWall(x, y)) {
           d.line(
             x * CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE,
+            animY * CELL_SIZE + CELL_SIZE,
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE);
+            animY * CELL_SIZE + CELL_SIZE);
         }
-        if (grid.hasEastWall(x, y)) {
+        if (grid.hasRightWall(x, y)) {
           d.line(
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE,
+            animY * CELL_SIZE,
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE);
+            animY * CELL_SIZE + CELL_SIZE);
         }
-        if (grid.hasWestWall(x, y)) {
+        if (grid.hasLeftWall(x, y)) {
           d.line(
             x * CELL_SIZE,
-            y * CELL_SIZE,
+            animY * CELL_SIZE,
             x * CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE);
+            animY * CELL_SIZE + CELL_SIZE);
         }
       }
     }
@@ -80,14 +81,14 @@ public class AnimatedWorld extends AbstractWorld {
 
   @Override
   protected CoinStack newCoinStack(int x, int y) {
-    var c = new AnimatedCoinStack(x, y);
+    var c = new AnimatedCoinStack(this, x, y);
     getEntities(x, y).add(c);
     return c;
   }
 
   @Override
   public void putBlock(int x, int y) {
-    getEntities(x, y).add(new AnimatedBlock(x, y));
+    getEntities(x, y).add(new AnimatedBlock(this, x, y));
   }
 
   @Override

@@ -23,28 +23,24 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
   public AnimatedRobot(int x, int y, Direction dir, int numberOfCoins, AnimatedWorld world) {
     super(x, y, dir, numberOfCoins, world);
     this.currentAngle = getAngleOfDir(dir);
+    this.world = world;
     setTarget(x, y);
     this.pos = target.copy();
-    this.world = world;
   }
 
   private void setTarget(int x, int y) {
-    this.target = new Vector(x, y)
+    this.target = new Vector(x, world.getHeight() - y - 1)
       .mul(CELL_SIZE)
       .add(CELL_PADDING, CELL_PADDING);
   }
 
   private double getAngleOfDir(Direction dir) {
-    switch (dir) {
-      case NORTH:
-        return Math.PI * 2;
-      case WEST:
-        return 3 * Math.PI / 2;
-      case SOUTH:
-        return Math.PI;
-      default:
-        return Math.PI / 2;
-    }
+    return switch (dir) {
+      case UP -> Math.PI * 2;
+      case LEFT -> 3 * Math.PI / 2;
+      case DOWN -> Math.PI;
+      default -> Math.PI / 2;
+    };
   }
 
   @Override

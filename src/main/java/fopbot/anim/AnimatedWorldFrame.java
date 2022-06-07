@@ -1,9 +1,9 @@
 package fopbot.anim;
 
-import fopbot.World;
 import fopbot.anim.paz.PanningAndZooming;
 import fopbot.anim.paz.PanningAndZoomingTarget;
 import fopbot.anim.paz.Vector;
+import fopbot.definitions.World;
 import fopbot.impl.Grid;
 
 import javax.swing.*;

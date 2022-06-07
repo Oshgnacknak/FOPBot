@@ -2,6 +2,7 @@ package fopbot.anim;
 
 import fopbot.anim.paz.Vector;
 import fopbot.anim.resources.Resources;
+import fopbot.definitions.World;
 import fopbot.impl.CoinStack;
 
 import java.awt.*;
@@ -22,13 +23,15 @@ public class AnimatedCoinStack extends CoinStack implements Animatable {
   private int currentNumberOfCoins;
   private Vector pos;
 
-  public AnimatedCoinStack(int x, int y) {
+  public AnimatedCoinStack(World world, int x, int y) {
     super(x, y);
     currentNumberOfCoins = 0;
+
+    var animY = world.getHeight() - y - 1;
     stack = new Vector(
       x * CELL_SIZE + (CELL_PADDING - WIDTH),
-      y * CELL_SIZE + (CELL_PADDING - WIDTH));
-    spawn = new Vector(x, y)
+      animY * CELL_SIZE + (CELL_PADDING - WIDTH));
+    spawn = new Vector(x, animY)
       .mul(CELL_SIZE)
       .add(CELL_SIZE / 2, CELL_SIZE / 2);
   }
