@@ -81,14 +81,15 @@ public class AnimatedWorldFrame extends JFrame implements PanningAndZoomingTarge
   }
 
   public void updateLoop() {
-    double last = System.currentTimeMillis();
+    double last = System.nanoTime();
     double acc = 0;
 
     while (world.isRunning()) {
-      double current = System.currentTimeMillis();
-      acc += current - last;
+      double current = System.nanoTime();
+      var dt = (current - last) * 1e-6;
+      acc += dt;
 
-      while (acc >= FRAME_DELAY) {
+      while (acc > FRAME_DELAY) {
         world.update(FRAME_DELAY);
         acc -= FRAME_DELAY;
       }
