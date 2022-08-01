@@ -15,7 +15,7 @@ import static fopbot.anim.AnimatedWorldFrame.CELL_SIZE;
 
 public class AnimatedWorld extends AbstractWorld {
 
-  private static final double UPDATE_TIMEOUT = 0.2;
+  private static final double UPDATE_TIMEOUT = 200;
 
   private final Lock lock = new ReentrantLock();
   private final Condition updateFinished = lock.newCondition();
@@ -103,6 +103,11 @@ public class AnimatedWorld extends AbstractWorld {
     running = true;
   }
 
+  @Override
+  public void stop() {
+    running = false;
+  }
+
   void update(double dt) {
     if (updateTimeout > 0) {
       updateTimeout -= dt;
@@ -123,7 +128,7 @@ public class AnimatedWorld extends AbstractWorld {
     for (int x = 0; x < grid.getWidth(); x++) {
       for (int y = 0; y < grid.getHeight(); y++) {
         for (var e : grid.getEntities(x, y)) {
-          if ((e instanceof Animatable) && !((Animatable) e).update(dt)) {
+          if ((e instanceof Animatable a) && !a.update(dt)) {
             updatesFinished = false;
           }
         }
@@ -152,10 +157,5 @@ public class AnimatedWorld extends AbstractWorld {
 
   public boolean isRunning() {
     return running;
-  }
-
-  @Override
-  public void stop() {
-    running = false;
   }
 }
