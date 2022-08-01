@@ -14,7 +14,6 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
 
   private static final double UPDATE_EPSILON = 0.05;
   private static final double ANGLE_VEL_SCALAR = 0.003;
-  private static final double VEL_SCALAR = 0.001;
 
   private final AnimatedWorld world;
 
@@ -42,7 +41,7 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
 
   private void setTarget(int x, int y) {
     var end = toAnimationPos(x, y);
-    motion = new TeleportWithDelay(motion.getPos(), end, 1000); // TODO: Delay from user!
+    motion = new TriangularMotion(motion.getPos(), end, 2500); // TODO: Delay from user!
   }
 
   private double getAngleOfDir(Direction dir) {
