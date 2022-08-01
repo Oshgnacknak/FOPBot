@@ -14,6 +14,7 @@ public class WallMazeExample {
 
   public static void main(String[] args) {
     World.setSize(5, 5);
+    World.setDelay(1600);
 
     generateGrid();
     var r = new Robot(0, 0, Direction.UP, 999);

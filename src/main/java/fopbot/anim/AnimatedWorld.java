@@ -15,7 +15,7 @@ import static fopbot.anim.AnimatedWorldFrame.CELL_SIZE;
 
 public class AnimatedWorld extends AbstractWorld {
 
-  private static final double UPDATE_TIMEOUT = 200;
+  private static final double UPDATE_TIMEOUT = 50;
 
   private final Lock lock = new ReentrantLock();
   private final Condition updateFinished = lock.newCondition();
@@ -23,6 +23,8 @@ public class AnimatedWorld extends AbstractWorld {
   private double updateTimeout = 0.0;
 
   private boolean running = false;
+
+  private int delay = 1000;
 
   public AnimatedWorld(Grid grid) {
     super(grid);
@@ -157,5 +159,13 @@ public class AnimatedWorld extends AbstractWorld {
 
   public boolean isRunning() {
     return running;
+  }
+
+  public int getDelay() {
+    return delay;
+  }
+
+  public void setDelay(int delay) {
+
   }
 }

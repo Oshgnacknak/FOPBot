@@ -65,6 +65,6 @@ public class World {
   }
 
   public static void setDelay(int delay) {
-    System.err.println("Warning: World.setDelay() is not implemented yet");
+    GlobalScene.INSTANCE.setDelay(delay);
   }
 }

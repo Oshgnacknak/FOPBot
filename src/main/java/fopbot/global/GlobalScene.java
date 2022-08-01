@@ -1,5 +1,6 @@
 package fopbot.global;
 
+import fopbot.anim.AnimatedWorld;
 import fopbot.definitions.World;
 import fopbot.impl.Grid;
 
@@ -35,6 +36,12 @@ public class GlobalScene {
     }
 
     return world;
+  }
+
+  public void setDelay(int delay) {
+    if (world instanceof AnimatedWorld aw) {
+      aw.setDelay(delay);
+    }
   }
 
   public void setRunner(GlobalRunner runner) {

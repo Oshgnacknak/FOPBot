@@ -41,7 +41,7 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
 
   private void setTarget(int x, int y) {
     var end = toAnimationPos(x, y);
-    motion = new TriangularMotion(motion.getPos(), end, 2500); // TODO: Delay from user!
+    motion = new TriangularMotion(motion.getPos(), end, world.getDelay());
   }
 
   private double getAngleOfDir(Direction dir) {
