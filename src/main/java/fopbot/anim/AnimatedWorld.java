@@ -34,8 +34,8 @@ public class AnimatedWorld extends AbstractWorld {
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
         for (var e : grid.getEntities(x, y)) {
-          if (e instanceof Animatable) {
-            ((Animatable) e).draw(d);
+          if (e instanceof Animatable a) {
+            a.draw(d);
           }
         }
       }
@@ -112,19 +112,13 @@ public class AnimatedWorld extends AbstractWorld {
 
   void update(double dt) {
     if (updateTimeout > 0) {
-      updateTimeout -= dt;
-      if (updateTimeout < 0) {
-        lock.lock();
-        try {
-          this.updateFinished.signal();
-        } finally {
-          lock.unlock();
-        }
-      }
-
-      return;
+      waitForUpdate(dt);
+    } else {
+      updateEntities(dt);
     }
+  }
 
+  private void updateEntities(double dt) {
     boolean updatesFinished = true;
 
     for (int x = 0; x < grid.getWidth(); x++) {
@@ -139,6 +133,18 @@ public class AnimatedWorld extends AbstractWorld {
 
     if (updatesFinished) {
       updateTimeout = UPDATE_TIMEOUT;
+    }
+  }
+
+  private void waitForUpdate(double dt) {
+    updateTimeout -= dt;
+    if (updateTimeout <= 0) {
+      lock.lock();
+      try {
+        this.updateFinished.signal();
+      } finally {
+        lock.unlock();
+      }
     }
   }
 
@@ -166,6 +172,6 @@ public class AnimatedWorld extends AbstractWorld {
   }
 
   public void setDelay(int delay) {
-
+    this.delay = delay;
   }
 }
