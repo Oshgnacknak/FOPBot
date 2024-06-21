@@ -24,58 +24,58 @@ public class Grid {
     }
   }
 
-  public boolean hasNorthWall(int x, int y) {
-    return hasWall(x, y, Direction.NORTH);
+  public boolean hasUpWall(int x, int y) {
+    return hasWall(x, y, Direction.UP);
   }
 
-  public void setNorthWall(int x, int y, boolean wall) {
-    setWall(x, y, Direction.NORTH, wall);
-    if (y > 0) {
-      setWall(x, y - 1, Direction.SOUTH, wall);
-    }
-  }
-
-  public boolean hasSouthWall(int x, int y) {
-    return hasWall(x, y, Direction.SOUTH);
-  }
-
-  public void setSouthWall(int x, int y, boolean wall) {
-    setWall(x, y, Direction.SOUTH, wall);
+  public void setUpWall(int x, int y, boolean wall) {
+    setWall(x, y, Direction.UP, wall);
     if (y < height - 1) {
-      setWall(x, y + 1, Direction.NORTH, wall);
+      setWall(x, y + 1, Direction.DOWN, wall);
     }
   }
 
-  public boolean hasEastWall(int x, int y) {
-    return hasWall(x, y, Direction.EAST);
+  public boolean hasDownWall(int x, int y) {
+    return hasWall(x, y, Direction.DOWN);
   }
 
-  public void setEastWall(int x, int y, boolean wall) {
-    setWall(x, y, Direction.EAST, wall);
+  public void setDownWall(int x, int y, boolean wall) {
+    setWall(x, y, Direction.DOWN, wall);
+    if (y > 0) {
+      setWall(x, y - 1, Direction.UP, wall);
+    }
+  }
+
+  public boolean hasRightWall(int x, int y) {
+    return hasWall(x, y, Direction.RIGHT);
+  }
+
+  public void setRightWall(int x, int y, boolean wall) {
+    setWall(x, y, Direction.RIGHT, wall);
     if (x < width - 1) {
-      setWall(x + 1, y, Direction.WEST, wall);
+      setWall(x + 1, y, Direction.LEFT, wall);
     }
   }
 
-  public boolean hasWestWall(int x, int y) {
-    return hasWall(x, y, Direction.WEST);
+  public boolean hasLeftWall(int x, int y) {
+    return hasWall(x, y, Direction.LEFT);
   }
 
-  public void setWestWall(int x, int y, boolean wall) {
-    setWall(x, y, Direction.WEST, wall);
+  public void setLeftWall(int x, int y, boolean wall) {
+    setWall(x, y, Direction.LEFT, wall);
     if (x > 0) {
-      setWall(x - 1, y, Direction.EAST, wall);
+      setWall(x - 1, y, Direction.RIGHT, wall);
     }
   }
 
   public boolean hasWall(int x, int y, Direction dir) {
     checkCoords(x, y);
-    return grid[x][y].walls[dir.ordinal()];
+    return getCell(x, y).walls[dir.ordinal()];
   }
 
-  private void setWall(int x, int y, Direction dir, boolean wall) {
+  public void setWall(int x, int y, Direction dir, boolean wall) {
     checkCoords(x, y);
-    grid[x][y].walls[dir.ordinal()] = wall;
+    getCell(x, y).walls[dir.ordinal()] = wall;
   }
 
   public int getWidth() {
@@ -88,7 +88,7 @@ public class Grid {
 
   public Collection<Entity> getEntities(int x, int y) {
     checkCoords(x, y);
-    return grid[x][y].entities;
+    return getCell(x, y).entities;
   }
 
   private void checkCoords(int x, int y) {
@@ -98,5 +98,9 @@ public class Grid {
     if (y < 0 || y >= height) {
       throw new IllegalArgumentException("Y coordinate invalid: " + y);
     }
+  }
+
+  private Cell getCell(int x, int y) {
+    return grid[x][height - y - 1];
   }
 }

@@ -1,8 +1,7 @@
 package fopbot.headless;
 
 import fopbot.Direction;
-import fopbot.Robot;
-import fopbot.World;
+import fopbot.definitions.Robot;
 import fopbot.impl.AbstractWorld;
 import fopbot.impl.Block;
 import fopbot.impl.CoinStack;

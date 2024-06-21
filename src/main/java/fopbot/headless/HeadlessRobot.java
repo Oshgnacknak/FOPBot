@@ -1,7 +1,7 @@
 package fopbot.headless;
 
 import fopbot.Direction;
-import fopbot.World;
+import fopbot.definitions.World;
 import fopbot.impl.AbstractRobot;
 
 public class HeadlessRobot extends AbstractRobot {

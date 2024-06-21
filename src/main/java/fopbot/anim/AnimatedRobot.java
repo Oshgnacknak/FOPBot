@@ -1,6 +1,7 @@
 package fopbot.anim;
 
 import fopbot.Direction;
+import fopbot.anim.motion.*;
 import fopbot.anim.paz.Vector;
 import fopbot.anim.resources.Resources;
 import fopbot.impl.AbstractRobot;
@@ -13,38 +14,43 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
 
   private static final double UPDATE_EPSILON = 0.05;
   private static final double ANGLE_VEL_SCALAR = 0.003;
-  private static final double VEL_SCALAR = 0.001;
 
   private final AnimatedWorld world;
-  private final Vector pos;
+
   private double currentAngle;
-  private Vector target;
+
+  private MotionProfile motion;
 
   public AnimatedRobot(int x, int y, Direction dir, int numberOfCoins, AnimatedWorld world) {
     super(x, y, dir, numberOfCoins, world);
     this.currentAngle = getAngleOfDir(dir);
-    setTarget(x, y);
-    this.pos = target.copy();
     this.world = world;
+
+    setAnimationPosition(x, y);
   }
 
-  private void setTarget(int x, int y) {
-    this.target = new Vector(x, y)
+  private void setAnimationPosition(int x, int y) {
+    motion = new Teleport(toAnimationPos(x, y));
+  }
+
+  private Vector toAnimationPos(int x, int y) {
+    return new Vector(x, world.getHeight() - y - 1)
       .mul(CELL_SIZE)
       .add(CELL_PADDING, CELL_PADDING);
   }
 
+  private void setTarget(int x, int y) {
+    var end = toAnimationPos(x, y);
+    motion = new TriangularMotion(motion.getPos(), end, world.getDelay());
+  }
+
   private double getAngleOfDir(Direction dir) {
-    switch (dir) {
-      case NORTH:
-        return Math.PI * 2;
-      case WEST:
-        return 3 * Math.PI / 2;
-      case SOUTH:
-        return Math.PI;
-      default:
-        return Math.PI / 2;
-    }
+    return switch (dir) {
+      case UP -> Math.PI * 2;
+      case LEFT -> 3 * Math.PI / 2;
+      case DOWN -> Math.PI;
+      default -> Math.PI / 2;
+    };
   }
 
   @Override
@@ -127,12 +133,8 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
   }
 
   private boolean updatePos(double dt) {
-    var vel = target
-      .copy()
-      .sub(pos)
-      .mul(VEL_SCALAR * dt);
-    pos.add(vel);
-    return target.dist(pos) < UPDATE_EPSILON;
+    motion.update(dt);
+    return motion.reached();
   }
 
   private boolean updateAngle(double dt) {
@@ -148,6 +150,7 @@ public class AnimatedRobot extends AbstractRobot implements Animatable {
   @Override
   public void draw(Drawable d) {
     var w = CELL_SIZE - CELL_PADDING * 2;
+    var pos = motion.getPos();
     d.rotated(
       currentAngle,
       pos.x + w / 2,

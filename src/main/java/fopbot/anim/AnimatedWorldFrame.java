@@ -1,9 +1,9 @@
 package fopbot.anim;
 
-import fopbot.World;
 import fopbot.anim.paz.PanningAndZooming;
 import fopbot.anim.paz.PanningAndZoomingTarget;
 import fopbot.anim.paz.Vector;
+import fopbot.definitions.World;
 import fopbot.impl.Grid;
 
 import javax.swing.*;
@@ -81,21 +81,21 @@ public class AnimatedWorldFrame extends JFrame implements PanningAndZoomingTarge
   }
 
   public void updateLoop() {
-    double last = System.currentTimeMillis();
+    double last = System.nanoTime();
+    double acc = 0;
 
     while (world.isRunning()) {
-      double current = System.currentTimeMillis();
-      double dt = current - last;
-      last = current;
+      double current = System.nanoTime();
+      var dt = (current - last) * 1e-6;
+      acc += dt;
 
-      world.update(dt);
-      repaint();
-
-      try {
-        Thread.sleep((long) FRAME_DELAY);
-      } catch (InterruptedException e) {
-        e.printStackTrace();
+      while (acc > FRAME_DELAY) {
+        world.update(FRAME_DELAY);
+        acc -= FRAME_DELAY;
       }
+
+      repaint();
+      last = current;
     }
   }
 

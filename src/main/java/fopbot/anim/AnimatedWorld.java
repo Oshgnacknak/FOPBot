@@ -1,7 +1,7 @@
 package fopbot.anim;
 
 import fopbot.Direction;
-import fopbot.Robot;
+import fopbot.definitions.Robot;
 import fopbot.impl.AbstractWorld;
 import fopbot.impl.CoinStack;
 import fopbot.impl.Grid;
@@ -15,7 +15,7 @@ import static fopbot.anim.AnimatedWorldFrame.CELL_SIZE;
 
 public class AnimatedWorld extends AbstractWorld {
 
-  private static final double UPDATE_TIMEOUT = 0.2;
+  private static final double UPDATE_TIMEOUT = 50;
 
   private final Lock lock = new ReentrantLock();
   private final Condition updateFinished = lock.newCondition();
@@ -23,6 +23,8 @@ public class AnimatedWorld extends AbstractWorld {
   private double updateTimeout = 0.0;
 
   private boolean running = false;
+
+  private int delay = 1000;
 
   public AnimatedWorld(Grid grid) {
     super(grid);
@@ -32,8 +34,8 @@ public class AnimatedWorld extends AbstractWorld {
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
         for (var e : grid.getEntities(x, y)) {
-          if (e instanceof Animatable) {
-            ((Animatable) e).draw(d);
+          if (e instanceof Animatable a) {
+            a.draw(d);
           }
         }
       }
@@ -46,33 +48,34 @@ public class AnimatedWorld extends AbstractWorld {
 
     for (int x = 0; x < getWidth(); x++) {
       for (int y = 0; y < getHeight(); y++) {
-        if (grid.hasNorthWall(x, y)) {
+        var animY = getHeight() - y - 1;
+        if (grid.hasUpWall(x, y)) {
           d.line(
             x * CELL_SIZE,
-            y * CELL_SIZE,
+            animY * CELL_SIZE,
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE);
+            animY * CELL_SIZE);
         }
-        if (grid.hasSouthWall(x, y)) {
+        if (grid.hasDownWall(x, y)) {
           d.line(
             x * CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE,
+            animY * CELL_SIZE + CELL_SIZE,
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE);
+            animY * CELL_SIZE + CELL_SIZE);
         }
-        if (grid.hasEastWall(x, y)) {
+        if (grid.hasRightWall(x, y)) {
           d.line(
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE,
+            animY * CELL_SIZE,
             x * CELL_SIZE + CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE);
+            animY * CELL_SIZE + CELL_SIZE);
         }
-        if (grid.hasWestWall(x, y)) {
+        if (grid.hasLeftWall(x, y)) {
           d.line(
             x * CELL_SIZE,
-            y * CELL_SIZE,
+            animY * CELL_SIZE,
             x * CELL_SIZE,
-            y * CELL_SIZE + CELL_SIZE);
+            animY * CELL_SIZE + CELL_SIZE);
         }
       }
     }
@@ -80,14 +83,14 @@ public class AnimatedWorld extends AbstractWorld {
 
   @Override
   protected CoinStack newCoinStack(int x, int y) {
-    var c = new AnimatedCoinStack(x, y);
+    var c = new AnimatedCoinStack(this, x, y);
     getEntities(x, y).add(c);
     return c;
   }
 
   @Override
   public void putBlock(int x, int y) {
-    getEntities(x, y).add(new AnimatedBlock(x, y));
+    getEntities(x, y).add(new AnimatedBlock(this, x, y));
   }
 
   @Override
@@ -102,27 +105,26 @@ public class AnimatedWorld extends AbstractWorld {
     running = true;
   }
 
+  @Override
+  public void stop() {
+    running = false;
+  }
+
   void update(double dt) {
     if (updateTimeout > 0) {
-      updateTimeout -= dt;
-      if (updateTimeout < 0) {
-        lock.lock();
-        try {
-          this.updateFinished.signal();
-        } finally {
-          lock.unlock();
-        }
-      }
-
-      return;
+      waitForUpdate(dt);
+    } else {
+      updateEntities(dt);
     }
+  }
 
+  private void updateEntities(double dt) {
     boolean updatesFinished = true;
 
     for (int x = 0; x < grid.getWidth(); x++) {
       for (int y = 0; y < grid.getHeight(); y++) {
         for (var e : grid.getEntities(x, y)) {
-          if ((e instanceof Animatable) && !((Animatable) e).update(dt)) {
+          if ((e instanceof Animatable a) && !a.update(dt)) {
             updatesFinished = false;
           }
         }
@@ -131,6 +133,18 @@ public class AnimatedWorld extends AbstractWorld {
 
     if (updatesFinished) {
       updateTimeout = UPDATE_TIMEOUT;
+    }
+  }
+
+  private void waitForUpdate(double dt) {
+    updateTimeout -= dt;
+    if (updateTimeout <= 0) {
+      lock.lock();
+      try {
+        this.updateFinished.signal();
+      } finally {
+        lock.unlock();
+      }
     }
   }
 
@@ -153,8 +167,11 @@ public class AnimatedWorld extends AbstractWorld {
     return running;
   }
 
-  @Override
-  public void stop() {
-    running = false;
+  public int getDelay() {
+    return delay;
+  }
+
+  public void setDelay(int delay) {
+    this.delay = delay;
   }
 }

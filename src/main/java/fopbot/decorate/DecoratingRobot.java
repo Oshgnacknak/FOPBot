@@ -1,7 +1,7 @@
 package fopbot.decorate;
 
 import fopbot.Direction;
-import fopbot.Robot;
+import fopbot.definitions.Robot;
 
 public class DecoratingRobot implements Robot {
 
